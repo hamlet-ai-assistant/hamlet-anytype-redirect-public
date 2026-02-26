@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Open Anytype</title>
+</head>
+<body>
+<script>
+  const p = new URLSearchParams(location.search);
+  const objectId = p.get('objectId');
+  const spaceId = p.get('spaceId');
+  const fallback = p.get('fallback');
+  if (!objectId || !spaceId) {
+    document.body.innerText = 'Missing objectId/spaceId';
+    throw new Error('Missing params');
+  }
+
+  const deep = `anytype://object?objectId=${encodeURIComponent(objectId)}&spaceId=${encodeURIComponent(spaceId)}`;
+  let hidden = false;
+  document.addEventListener('visibilitychange', () => { if (document.hidden) hidden = true; });
+
+  window.location.href = deep;
+
+  setTimeout(() => {
+    if (!hidden && fallback) window.location.href = fallback;
+    if (!hidden && !fallback) document.body.innerText = 'Открываю Anytype...';
+  }, 900);
+</script>
+</body>
+</html>
