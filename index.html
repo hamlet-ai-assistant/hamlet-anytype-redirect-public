@@ -8,15 +8,20 @@
 <body>
 <script>
   const p = new URLSearchParams(location.search);
+  const deepParam = p.get('deep');
   const objectId = p.get('objectId');
   const spaceId = p.get('spaceId');
   const fallback = p.get('fallback');
-  if (!objectId || !spaceId) {
-    document.body.innerText = 'Missing objectId/spaceId';
-    throw new Error('Missing params');
+
+  let deep = deepParam;
+  if (!deep) {
+    if (!objectId || !spaceId) {
+      document.body.innerText = 'Missing deep or objectId/spaceId';
+      throw new Error('Missing params');
+    }
+    deep = `anytype://object?objectId=${encodeURIComponent(objectId)}&spaceId=${encodeURIComponent(spaceId)}`;
   }
 
-  const deep = `anytype://object?objectId=${encodeURIComponent(objectId)}&spaceId=${encodeURIComponent(spaceId)}`;
   let hidden = false;
   document.addEventListener('visibilitychange', () => { if (document.hidden) hidden = true; });
 
